@@ -31,20 +31,24 @@ public class _221010310064_main {
 			}
 		}
 	}
-
 	public static void write(String s, int[] girdi, LinkedList<_21010310064_fst> states) {
 		_21010310064_fst fst= states.get(0);
+		ArrayList<String> durumlar= new ArrayList<String>();
+		String sonuc="";
 		for (int i = 0; i < s.length(); i++) {
 			for(int j=0;j<girdi.length;j++) {
 				if (Character.getNumericValue(s.charAt(i)) == girdi[j]) {
-					System.out.println(fst.state);
-					System.out.println(fst.baglantiBul(girdi[j]).cikisval);
+					durumlar.add(fst.state);
+					sonuc=sonuc+fst.baglantiBul(girdi[j]).cikisval;
 					fst=fst.baglantiBul(girdi[j]).diger;
 				}
 			}
 
 		}
-		System.out.println(fst.state);
+		durumlar.add(fst.state);
+		System.out.println(durumlar);
+		System.out.println(sonuc);
+
 
 	}
 	public static _21010310064_fst getFst(String state,LinkedList<_21010310064_fst> states) {
