@@ -44,6 +44,7 @@ public class _221010310064_main {
 			}
 
 		}
+		System.out.println(fst.state);
 
 	}
 	public static _21010310064_fst getFst(String state,LinkedList<_21010310064_fst> states) {
