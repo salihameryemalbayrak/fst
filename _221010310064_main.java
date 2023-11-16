@@ -1,54 +1,60 @@
 package sezerinodevii;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 
-public class _221010310064_main {
+public class _21010310064_main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
+		File fle= new File("FST.txt");
+		Scanner dosya= new Scanner(fle);
 		Scanner input = new Scanner(System.in);
+		
 		LinkedList<_21010310064_fst> states = new LinkedList<_21010310064_fst>();
-		int[] girdi = new int[3];
-		girdi[0] = 0;
-		girdi[1] = 1;
-		girdi[2] = 2;
-		System.out.println("-----");
-		_21010310064_fst fst = new _21010310064_fst(input.next());
-		_21010310064_fst fst2 = new _21010310064_fst(input.next());
-		states.add(fst);
-		states.add(fst2);
-		baglantiOlustur(input, states, girdi);
-		write(input.next(), girdi, states);
+		LinkedList<Integer> girdiler =new LinkedList<Integer>();
+		
+		dosyaOku(dosya,states,girdiler);
+		dosya.next(); dosya.next();
+		System.out.println("Lütfen birinci input’u giriniz:");
+		write(input.next(), girdiler, states,dosya.next());
+		input.close();
 
 	}
-
-	public static void baglantiOlustur(Scanner input, LinkedList<_21010310064_fst> states, int[] girdi) {
+	
+	public static void baglantiOlustur(Scanner input, LinkedList<_21010310064_fst> states, LinkedList<Integer> girdiler) {
 		for (int i = 0; i < states.size(); i++) {
 			_21010310064_fst fst = states.get(i);
-			for(int j=0;j<girdi.length;j++) {
-				fst.baglantiEkle(getFst(input.next(),states), girdi[j], input.nextInt());
+			input.next();
+			for(int j=0;j<girdiler.size();j++) {
+				String s=input.next().replace("(", "");
+				s=s.replace(",", "");
+				String g=input.next().replace(")", "");
+				int cikti=Integer.parseInt(g);
+				fst.baglantiEkle(getFst(s,states), girdiler.get(j), cikti);
 			}
 		}
 	}
-	public static void write(String s, int[] girdi, LinkedList<_21010310064_fst> states) {
-		_21010310064_fst fst= states.get(0);
+
+	public static void write(String s, LinkedList<Integer> girdiler, LinkedList<_21010310064_fst> states,String baslangic) {
+		_21010310064_fst fst= getFst(baslangic,states);
 		ArrayList<String> durumlar= new ArrayList<String>();
-		String sonuc="";
+		String sonuc ="";
 		for (int i = 0; i < s.length(); i++) {
-			for(int j=0;j<girdi.length;j++) {
-				if (Character.getNumericValue(s.charAt(i)) == girdi[j]) {
+			for(int j=0;j<girdiler.size();j++) {
+				if (Character.getNumericValue(s.charAt(i)) == girdiler.get(j)) {
 					durumlar.add(fst.state);
-					sonuc=sonuc+fst.baglantiBul(girdi[j]).cikisval;
-					fst=fst.baglantiBul(girdi[j]).diger;
+					sonuc=sonuc+fst.baglantiBul(girdiler.get(j)).cikisval;
+					fst=fst.baglantiBul(girdiler.get(j)).diger;
 				}
 			}
 
 		}
 		durumlar.add(fst.state);
-		System.out.println(durumlar);
-		System.out.println(sonuc);
-
+		System.out.println("durumların sırası:"+durumlar);
+		System.out.println("çıktı: " +sonuc);
 
 	}
 	public static _21010310064_fst getFst(String state,LinkedList<_21010310064_fst> states) {
@@ -59,26 +65,45 @@ public class _221010310064_main {
 		}
 		return null;
 	}
+	public static void dosyaOku(Scanner input,LinkedList<_21010310064_fst> states, LinkedList<Integer> girdiler) {
+		
+		input.next();input.next();
+		
+		String s= input.next().replace("{","");
+		while(!s.contains("}")) {
+			s=s.replace(",", "");
+			_21010310064_fst fstler = new _21010310064_fst(s);
+			states.add(fstler);
+			s=input.next();
+		}
+		s=s.replace("}","");
+		_21010310064_fst sonfst = new _21010310064_fst(s);
+		states.add(sonfst);
+		
+		input.next();input.next();
+		
+		String g= input.next().replace("{","");
+		int girdi;
+		while(!g.contains("}")) {
+			g=g.replace(",", "");
+			girdi=Integer.parseInt(g);
+			girdiler.add(girdi);
+			g=input.next();
+		}
+		g=g.replace("}","");
+		girdi=Integer.parseInt(g);
+		girdiler.add(girdi);
+		
+		input.nextLine(); input.nextLine(); input.nextLine();
+		baglantiOlustur(input,states,girdiler);
+		
+		
+	}
+
 	
-
+	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
